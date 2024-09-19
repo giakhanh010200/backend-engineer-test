@@ -10,7 +10,14 @@ class Product {
     private float $depth;
     private ?string $type;
 
-    public function __construct(float $amazon_price, float $weight, float $width, float $height, float $depth, ?string $type = null)
+    public function __construct(
+        float $amazon_price, 
+        float $weight, 
+        float $width, 
+        float $height, 
+        float $depth, 
+        ?string $type = null
+    )
     {
         $this->amazon_price = $amazon_price;
         $this->weight = $weight;

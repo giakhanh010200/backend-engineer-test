@@ -1,6 +1,7 @@
 <?php 
 namespace App;
 
+use App\Shipping\ShippingContext;
 class Order
 {
     private array $products = [];
@@ -10,11 +11,11 @@ class Order
         $this->products[] = $product;
     }
 
-    public function calculateTotalPrice($shippingContext): float
+    public function calculateTotalPrice(ShippingContext $shippingContext): float
     {
         $totalPrice = 0.0;
         foreach ($this->products as $product) {
-            $totalPrice += $product->getAmazonPrice() + $shippingContext->calculateShippingCost($product);
+            $totalPrice += $product->getAmazonPrice() + $shippingContext->calculateShipping($product);
         }
 
         return $totalPrice;

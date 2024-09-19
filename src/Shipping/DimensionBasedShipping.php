@@ -1,7 +1,9 @@
 <?php
-namespace App;
+namespace App\Shipping;
 
-class DimensionBasedShipping
+use App\Product;
+
+class DimensionBasedShipping implements ShippingStrategy
 {
     public function calculateShippingCost(Product $product): float
     {

@@ -1,7 +1,9 @@
 <?php 
-namespace App;
+namespace App\Shipping;
 
-class WeightBasedShipping
+use App\Product;
+
+class WeightBasedShipping implements ShippingStrategy
 {
     public function calculateShippingCost(Product $product): float
     {

@@ -2,11 +2,12 @@
 
 use PHPUnit\Framework\TestCase;
 use App\Product;
-use App\WeightBasedShipping;
-use App\DimensionBasedShipping;
-use App\CombinedShippingStrategy;
-use App\ProductTypeFeeDecorator;
 use App\Order;
+use App\Shipping\WeightBasedShipping;
+use App\Shipping\DimensionBasedShipping;
+use App\Shipping\CombinedShippingStrategy;
+use App\Shipping\ProductTypeFeeDecorator;
+use App\Shipping\ShippingContext;
 
 class ShippingTest extends TestCase
 {
@@ -88,18 +89,17 @@ class ShippingTest extends TestCase
             'diamond_ring' => 50.0,
         ];
 
-        // Use CombinedShippingStrategy (max of weight and dimensions), wrapped by the ProductTypeFeeDecorator
         $combinedStrategy = new CombinedShippingStrategy(new WeightBasedShipping(), new DimensionBasedShipping());
         $decoratedStrategy = new ProductTypeFeeDecorator($combinedStrategy, $productTypeFees);
+        $context = new ShippingContext($decoratedStrategy);
 
-        // Create an order and add multiple products
         $order = new Order();
         $order->addProduct($productSmartphone);
         $order->addProduct($productDiamondRing);
         $order->addProduct($hiddenBox);
 
+        $totalShippingCost = $order->calculateTotalPrice($context);
         // Calculate the total shipping cost for the order
-        $totalShippingCost = $order->calculateTotalPrice($decoratedStrategy);
 
         // Expected total shipping cost:
         // - Smartphone: max(0.3 * 11, (0.15 * 0.075 * 0.005 ) * 11) = max(3.3, 0.0006) = 15 (due to product type fee)
